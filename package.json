@@ -1,0 +1,24 @@
+{
+  "name": "reviews-api",
+  "version": "1.0.0",
+  "description": "Initial Repo Creation",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ruby-SDC/Reviews-API.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ruby-SDC/Reviews-API/issues"
+  },
+  "homepage": "https://github.com/Ruby-SDC/Reviews-API#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  }
+}
