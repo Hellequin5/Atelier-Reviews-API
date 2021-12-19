@@ -61,12 +61,15 @@ app.post('/reviews', async (req, res) => {
   res.send(review_id);
 })
 
-app.put('/reviews/:review_id/helpful', (req, res) => {
-
+app.put('/reviews/:review_id/helpful', async (req, res) => {
+  // console.log(req.params)
+  await db.helpful(req.params.review_id);
+  res.status(204).send();
 })
 
-app.put('/reviews/:review_id/report', (req, res) => {
-
+app.put('/reviews/:review_id/report', async (req, res) => {
+  await db.reported(req.query.review_id);
+  res.status(204);
 })
 
 app.listen(port, () => {

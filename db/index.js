@@ -83,7 +83,7 @@ const addReview = (reviewObj) => {
   const queryString = 'INSERT into public.reviews (product_id, rating, summary, body, recommend, reviewer_name) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id ;'
   const values = [reviewObj.product_id, reviewObj.rating, reviewObj.summary, reviewObj.body, reviewObj.recommend, reviewObj.reviewer_name]
 
-  return db.query(querySting, values)
+  return db.query(queryString, values)
     .then(res => {
       console.log(res.rows);
       return res.rows
@@ -95,7 +95,7 @@ const addPhoto = (review_id, photo) => {
   const queryString = 'INSERT into public.photos (review_id, url) VALUES ($1, $2)'
   const values = [review_id, photo]
 
-  return db.query(querySting, values)
+  return db.query(queryString, values)
   .then(res => {
     console.log(res);
   })
@@ -106,7 +106,7 @@ const addCharacteristics = (characteristic_id, review_id, value) => {
   const queryString = 'INSERT into public.characteristics_reviews (characteristic_id, review_id, value) VALUES ($1, $2, $3)'
   const values = [characteristic_id, review_id, value]
 
-  return db.query(querySting, values)
+  return db.query(queryString, values)
   .then(res => {
     console.log(res);
   })
@@ -115,11 +115,25 @@ const addCharacteristics = (characteristic_id, review_id, value) => {
 
 // UPDATE HELPFUL AND REPORT MEHTODS
 const helpful = (id, direction) => {
+ const queryString = 'UPDATE public.reviews SET helpfulness = helpfulness + 1 WHERE id=$1;';
+ const value = [id];
 
+ return db.query(queryString, value)
+ .then(res => {
+   console.log(res);
+ })
+ .catch(err => console.error(err))
 }
 
 const reported = (id) => {
+  const queryString = 'UPDATE public.reviews SET reported = true WHERE id=$1;';
+  const value = [id];
 
+  return db.query(queryString, value)
+  .then(res => {
+    console.log(res);
+  })
+  .catch(err => console.error(err))
 }
 
 module.exports = {
@@ -130,5 +144,7 @@ module.exports = {
   getCharacteristics:getCharacteristics,
   addReview: addReview,
   addPhoto: addPhoto,
-  addCharacteristics: addCharacteristics
+  addCharacteristics: addCharacteristics,
+  helpful: helpful,
+  reported: reported
 }
