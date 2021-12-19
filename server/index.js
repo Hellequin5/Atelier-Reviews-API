@@ -7,8 +7,9 @@ const port = 3000;
 app.use(express.json());
 
 app.get('/reviews', async (req, res) => {
+  console.log(typeof req.query.product_id)
   const params = req.query;
-  let test = await db.getReviews(params.product_id, params.count, params.page, params.sort);
+  let test = await db.getReviews(Number(params.product_id), Number(params.count) ? Number(params.count) : 5, Number(params.page) ? Number(params.page) : 1, params.sort ? params.sort : 'newest');
   // console.log(test);
   for (var i = 0; i < test.length; i++) {
     let photos = await db.getPhotos(test[i].id)
@@ -29,11 +30,35 @@ app.get('/reviews/meta', async (req, res) => {
   let ratings = await db.getMetaRatings(id);
   let recommended = await db.getMetaRecommended(id);
   let characteristics = await db.getCharacteristics(id);
-  res.send('test');
+
+  // needs to be cleaned up, but using for initial deployment
+  const result = {
+    product_id: id,
+    ratings: ratings,
+    recommended: recommended,
+    characteristics: characteristics
+  }
+  res.send(result);
 })
 
-app.post('/reviews', (req, res) => {
+app.post('/reviews', async (req, res) => {
+  const initialObj = {
+    product_id: req.query.product_id,
+    rating: req.query.rating,
+    summary: req.query.summary,
+    body: req.query.body,
+    recommend: req.query.recommend,
+    reviewer_name: req.query.name
+  }
 
+  const review_id = await db.addReview(initialObj);
+  for (let i = 0; i < req.query.photos.length; i++) {
+    await db.addPhoto(review_id, req.query.photos[i])
+  }
+  for (let key of req.query.characteristics) {
+    await db.addCharacteristics(key, review_id, req.query.characteristics[key])
+  }
+  res.send(review_id);
 })
 
 app.put('/reviews/:review_id/helpful', (req, res) => {
