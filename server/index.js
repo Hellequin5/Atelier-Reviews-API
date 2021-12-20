@@ -72,6 +72,10 @@ app.put('/reviews/:review_id/report', async (req, res) => {
   res.status(204);
 })
 
+app.get('/test', async (req, res) => {
+ res.status(200).send('received')
+});
+
 app.listen(port, () => {
   console.log(`Reviews API is listening at localhost:${port}`)
 })
